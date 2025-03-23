@@ -1,24 +1,38 @@
 # import global and baro data and write to dir
 library(kofdata)
-library(tidyverse)
-library(stats)
-library(scales)
-library(zoo)
 
 # import data
+tsl <- get_time_series(c("ch.kof.barometer", "ch.kof.globalbaro.leading"))
+names(tsl)
 baro <- get_time_series("kofbarometer")
 baro_changed <- lapply(baro, "*", 3)
 baro <- ts(baro, start = c(1991, 1), frequency = 12)
 baro_changed <- ts(baro_changed, start = c(1991, 1), frequency = 12)
 
 # create a new folder structure in this repo
-# Define the main directory path
 new_folder_path <- file.path(getwd(), "data/ch/kof")
+
+# get repository name, e.g. ch.kof -> everything until second "."
+gsub("^([a-z]+\\.[a-z]+)\\.(.*)", "\\2", names(tsl))
+
+
+# function to create subfolders from id
+
+create_ts_folders <- function(ts_keys) {
+  # split into repo and id
+  # loop through each ts_keys
+  for (key in ts_keys) {
+
+  }
+}
+
+
+
 
 # Function to create directories
 create_sub_folders <- function(x) {
   if (!dir.exists(x)) {
-    dir.create(x, recursive = TRUE) # Creates parent directories if they don't exist
+    dir.create(x, recursive = TRUE)
     print(paste("Created directory:", x))
   } else {
     print(paste("Directory already exists:", x))
@@ -38,24 +52,12 @@ create_sub_folders <- function(x) {
 }
 
 # Call the function
-# create_sub_folders(new_folder_path)
+create_sub_folders(new_folder_path)
 
 # write data
 getwd()
 write.csv(baro$kofbarometer, "data/ch/kof/baro/series.csv", row.names = FALSE)
 write.csv(baro_changed$kofbarometer, "data/ch/kof/baro2/series.csv", row.names = FALSE)
-
-# v2
-# random_change <- function(ts) {
-#   num <- floor(length(ts) * 0.2)
-#   print(num)
-#   rep <- sample.int(1, num, replace = TRUE)
-#   print(num)
-#   nums_to_modify <- sample(1:ceiling(length(ts) * 0.2), rep)
-#   # list_num_to_modify <- sample(1:length(ts),
-#   # )
-#   # list_to_modify <- list()
-# }
 
 
 # random changes
